@@ -131,10 +131,10 @@ def total_print(number_of_locations):
 
 def total_setup(quantity):
     if int(quantity) < 288:
-        setup_cost = float(input("Setup Cost: $"))
+        setup_cost = input("Setup Cost: $")
         number_of_setups = input("Number of set ups: ")
         if int(quantity) > 0:
-            setup_piece = round(setup_cost / quantity, 2)
+            setup_piece = round(float(setup_cost) * float(number_of_setups) / float(quantity), 2)
             print("Setup cost per piece: $" + str(setup_piece))
         else:
             setup_piece = 0.00
@@ -144,7 +144,29 @@ def total_setup(quantity):
 
     return setup_piece
 
-def hard_setup(quantity):
+def hard_setup(quantity, check):
+    if check == "y":
+        i = 1
+        hard_setup = 0
+        while i != 0:
+            set_float = input(f"Location {i} Cost: $")
+            letter_code = input("Price Code: ")
+            net_set = price_code(letter_code, set_float)
+            hard_setup += float(net_set)
+            check = input("Is there another setup? y/n ")
+            if check == "y":
+                i += 1
+            else:
+                i = 0
+        else:
+            set_piece = hard_setup / quantity
+            print(f"Total Setup Cost: ${hard_setup}")
+            print(f"Setup per Piece: ${set_piece}")
+            return set_piece
+    else:
+        set_piece = 0
+        return set_piece
+
 
 
 def private_label(check_private_label):
@@ -314,6 +336,7 @@ def calc_fun(check):
     exit_check()
 
 def price_code(letter_code, price):
+    price = float(price)
     if letter_code == 'a' or letter_code =='p':
         price *= 0.5
         print(f"Net cost: {price}")
@@ -360,7 +383,8 @@ def hard_fun(check):
         blank_cost = blank(check)
         letter_code = input("Price Code: ")
         net_cost = price_code(letter_code, blank_cost)
-
+        setup_check = input("Are there setup costs? y/n")
+        total_setup_cost = hard_setup(quantity, setup_check)
         exit_check()
 def exit_check():
     want_to_exit = input("Would you like to exit? y/n ")
