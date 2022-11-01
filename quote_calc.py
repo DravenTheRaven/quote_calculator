@@ -1,3 +1,6 @@
+#every input has validation and won't let you enter anything invalid
+
+#takes the menu input as check and gets blank cost
 def blank(check):
     if check == "y":
         blank_cost = input("Blank Cost: $")
@@ -11,6 +14,8 @@ def blank(check):
             return blank_float
     return blank_cost
 
+#takes the menu input and gets quantity all of the check things
+#will be depreciated soon
 def quantity_check(check):
     if check == "y":
         quantity_output = input("Quantity: ")
@@ -24,6 +29,7 @@ def quantity_check(check):
             return quantity_int
     return quantity_output
 
+#setup fees are only for orders less than 288. this will only show if the quantity is >= 288
 def total_setup(quantity):
     num_set_str = "Number of Setups:"
     set_str = "Setup Cost: $"
@@ -43,6 +49,7 @@ def total_setup(quantity):
 
     return setup_piece
 
+#the setups fees work differently in hard goods
 def hard_setup(quantity, set_check_str, more_set_str, p_code_str):
     check = simple_y_n(set_check_str)
     if check == "y":
@@ -79,6 +86,7 @@ def hard_setup(quantity, set_check_str, more_set_str, p_code_str):
         set_piece = 0
         return set_piece
 
+#checks if the order needs private neck labels. they have a static price of $0.25
 def private_label(private_check_str):
     check_private_label = input(f"{private_check_str}")
     if check_private_label == "y":
@@ -93,6 +101,7 @@ def private_label(private_check_str):
     print(f"Private Label Cost: $ {private_label_float}")
     return private_label_float
 
+#adds the total cost. in previous versions there were three of these to account for 2xl and 3xl
 def add_cost(blank_cost, printing_cost, setup_piece, private_label_cost, finishing_cost):
     if blank_cost != 0:
         cost = float(blank_cost) + float(printing_cost) + float(setup_piece) + float(private_label_cost) + float(finishing_cost)
@@ -101,6 +110,7 @@ def add_cost(blank_cost, printing_cost, setup_piece, private_label_cost, finishi
         cost = 0
         return cost
 
+#different function because it has a different amount of arguments. will consolidate later
 def hard_add_cost(blank_cost, printing_cost, total_setup_cost):
     if blank_cost != 0:
         cost = float(blank_cost) + float(printing_cost) + float(total_setup_cost)
@@ -110,34 +120,40 @@ def hard_add_cost(blank_cost, printing_cost, total_setup_cost):
         cost = 0
         return cost
 
+#makes sure there are 3xl before it prints
 def three_xl_cost_check(total_three_xl_cost):
     if total_three_xl_cost > 0:
         print(f"Total 3XL Cost: ${total_three_xl_cost:.2f}")
     else:
         pass
 
+#same for this one. will consolidate
 def two_xl_cost_check(total_two_xl_cost):
     if total_two_xl_cost > 0:
         print(f"Total 2XL Cost: ${total_two_xl_cost:.2f}")
     else:
         pass
 
+#these are seperate functions becuase of the order I want them to print
 def three_xl_price_check(three_xl_price):
     if float(three_xl_price) > 0:
         print(f"3XL Price: ${three_xl_price:.2f}")
     else:
         pass
 
+#same here. will consolidate
 def two_xl_price_check(two_xl_price):
     if float(two_xl_price) > 0:
         print(f"2XL Price: ${two_xl_price:.2f}")
     else:
         pass
 
+#calculates sell cost with a simple profit margin equation
 def price_margin(total_cost, final_margin):
     price_float = float(total_cost) / float(final_margin)
     return price_float
 
+#the user inputs the margin they want. this converts that input into what is needed for the equation
 def margin_invert(margin_output):
     if margin_output < 1:
         inverted_margin = 1 - margin_output
@@ -146,6 +162,7 @@ def margin_invert(margin_output):
         inverted_margin = (100 - margin_output) / 100
         return inverted_margin
 
+#float validation that loops until valid input is given
 def float_validate(var_str):
     num = input(f"{var_str}")
     try:
@@ -157,6 +174,7 @@ def float_validate(var_str):
     else:
         return float_num
 
+#same as above but integers
 def int_validate(var_str):
     num = input(f"{var_str}")
     try:
@@ -168,6 +186,7 @@ def int_validate(var_str):
     else:
         return int_num
 
+#validates yes no questions and gets input if yes
 def yes_no_validation(var_str, val_op_str):
 
     check = input(f"{var_str}")
@@ -182,6 +201,8 @@ def yes_no_validation(var_str, val_op_str):
         float_value = yes_no_validation(var_str, val_op_str)
         return float_value
 
+#this is the replacement for all the location functions in previous versions
+#essentially I learned how to do while loops to write this bit
 def location_validation(check):
     if check == "y":
         i = 1
@@ -203,6 +224,7 @@ def location_validation(check):
         print(total_print)
         return total_print
 
+#yes no validation without prompting for input
 def simple_y_n(var_str):
     check = input(f"{var_str}")
     if check == "y":
@@ -214,6 +236,9 @@ def simple_y_n(var_str):
         check = simple_y_n(var_str)
         return check
 
+#similar to location validation but with hard goods there are price codes against
+#which the listed price has to be multiplied
+#returns 0 if check equals no
 def net_print(run_check_str, p_code_str):
     check = simple_y_n(run_check_str)
     if check == "y":
@@ -237,9 +262,14 @@ def net_print(run_check_str, p_code_str):
         print(f"Total Printing Cost: ${total_print:.2f}")
         return total_print
 
+#the function for calculating screen printing costs
 def calc_fun(check):
     if check != "y":
         exit_check()
+
+    #string variables for my string literals
+    #trying to think of a better way to do things
+    #i bet money it's classes
     elif check == "y":
         b_cost_str = "Blank Cost: $"
         valid_num_str = "Please enter a valid number."
@@ -278,26 +308,42 @@ def calc_fun(check):
         quant_str = "Quantity: "
         num_loc_str = "Number of Locations: "
         val_int_str = "Please enter a valid whole number."
+        #end of string definitions
+
+        #basic information about the job. this is printed onto the document that gets saved
         customer = input("Customer: ")
         job_name = input("Job Name: ")
         item_number = input("Item Number: ")
         color = input("Color: ")
+
+        #most of the input and output is handled within the validation functions
+        #they loop until you give a valid answer
         quantity = int_validate(quant_str)
         blank_cost = float_validate(b_cost_str)
+        #two and three xl are not always on orders and the cost more
+        #if yes it functions like the rest of the functions. if no it skips the rest
         two_xl_cost= yes_no_validation(two_x_ch_str, two_x_str)
         three_xl_cost = yes_no_validation(three_x_ch_str, three_x_str)
+        #the location validation function asks if there are costs. if yes it takes input and adds it to the total cost and repeats
+        #if no it returns the total printing cost. if it is the first iteration printing cost is zero
         printing_cost = location_validation(check)
         set_piece = total_setup(quantity)
         private_label_cost = private_label(private_check_str)
+        #uses the same function as 2xl and 3xl
         finishing_cost = yes_no_validation(fin_check_str, fin_cost_str)
+        #gets the user's desired profit margin. it can be integer or float
         margin_output = float_validate(prof_mar_str)
+        #makes the margin input usable for the program
         final_margin = margin_invert(margin_output)
+        #this one is just simple addition
         total_cost = add_cost(blank_cost, printing_cost, set_piece, private_label_cost, finishing_cost)
         print(f"Total Cost: ${total_cost:.2f}")
+        #runs even if there are no 2xl/3xl. the price is just zero. the next function prints the cost if it is > 0
         total_two_xl_cost = add_cost(two_xl_cost, printing_cost, set_piece, private_label_cost, finishing_cost)
         two_xl_print_toggle = two_xl_cost_check(total_two_xl_cost)
         total_three_xl_cost = add_cost(three_xl_cost, printing_cost, set_piece, private_label_cost, finishing_cost)
         three_xl_print_toggle = three_xl_cost_check(total_three_xl_cost)
+        #price divided by margin
         price = price_margin(total_cost, final_margin)
         print(f"Price SM-XL: ${price:.2f}")
         two_xl_price = price_margin(total_two_xl_cost, final_margin)
@@ -307,8 +353,10 @@ def calc_fun(check):
         print("Hit enter to continue...")
         input(".....")
 
+        #checks if the user wants to save. passes the arguments to be printed for the customer
         save_check(customer, job_name, color, price, two_xl_price, three_xl_price, item_number, quantity)
 
+        #simple return to menu function
         menu_check = simple_y_n(men_check_str)
         if menu_check == "n":
             exit_check()
@@ -316,6 +364,9 @@ def calc_fun(check):
             menu()
     exit_check()
 
+#takes the price listed on the website and multiplies it by a discount code represented by a letter
+#this just takes the letter input and converts it to make it easier for the user
+#has similar built in validation to the other functions in this program
 def price_code(p_code_str, price):
     letter_code = input(f"{p_code_str}")
     price = float(price)
@@ -355,10 +406,13 @@ def price_code(p_code_str, price):
 
 #def net_convert(float_code, blank_cost)
 
+
+#hard goods function all put together. takes input from the menu function
 def hard_fun(check):
     if check != "y":
         exit_check()
     elif check == "y":
+        #string for literals. i'm trying to consolitdate them down
         b_cost_str = "Blank Cost: $"
         valid_num_str = "Please enter a valid number."
         to_print_str = "Total Printing Cost: $"
@@ -384,20 +438,29 @@ def hard_fun(check):
         #integer input
         quant_str = "Quantity:  "
         val_int_str = "Please enter a valid whole number."
+
+        #basic job input
         customer = input("Customer: ")
         job_name = input("Job Name: ")
         item_number = input("Item Number: ")
         color = input("Color: ")
+        #gets and validates quantity
         quantity = quantity_check(check)
+        #takes blank cost and multiplies by price code
         blank_cost = blank(check)
         net_cost = price_code(p_code_str, blank_cost)
+        #get the rest of the costs and multiply by price codes
         total_setup_cost = hard_setup(quantity, set_check_str, more_set_str, p_code_str)
         net_print_cost = net_print(run_check_str, p_code_str)
         total_hard_cost = hard_add_cost(net_cost, total_setup_cost, net_print_cost)
+        #margin works the same as with screen printing
         margin_output = float_validate(prof_mar_str)
         final_margin = margin_invert(margin_output)
+        #calculates price
         price = price_margin(total_hard_cost, final_margin)
         print(f"Price: ${price:.2f}")
+
+        #save check that takes what is saved to the document as arguments
         hard_save_check(customer, job_name, color, price, item_number, quantity)
         check = simple_y_n(men_check_str)
         if check == "n":
@@ -405,6 +468,7 @@ def hard_fun(check):
         elif check == "y":
             menu()
 
+#basic about section
 def about():
     print("Welcome to the pricing calculator.")
     print("Type 'y' or 'n' when prompted.")
@@ -419,6 +483,7 @@ def about():
     elif menu_check == "n":
         exit_check()
 
+#basic exit/menu check
 def exit_check():
     want_to_exit = "Would you like to exit? y/n "
     check = simple_y_n(want_to_exit)
@@ -432,6 +497,7 @@ def exit_check():
         elif menu_check == "y":
             menu()
 
+#save function for screen printing. need to consolidate with the hard goods one
 def save_check(customer, job_name, color, price, two_xl_price, three_xl_price, item_number, quantity):
     want_to_save = "Would you like to save this quote? y/n "
     want_save_check = simple_y_n(want_to_save)
@@ -476,6 +542,8 @@ f"""Price 3XL: ${three_xl_price:.2f}
 """)
         f.close()
 
+#same as the screen printing one, just less arguments
+#i made this one myself. i'll probably add an actual one
 def hard_save_check(customer, job_name, color, price, item_number, quantity):
     want_to_save = "Would you like to save this quote? y/n "
     check = simple_y_n(want_to_save)
@@ -504,6 +572,9 @@ f"""Price: ${price:.2f}
 """)
         f.close()
 
+
+#menu function that acts as the main loop
+#gets options based on letter. i'm going to add keybindings
 def menu():
     print("Main Menu: ")
     print("Screen Printing")
@@ -531,4 +602,7 @@ def menu():
         menu()
     return
 
+#runs the whole thing. i did this before i messed with tkinter or infinite loops in general
+#i just rememberd that games had a main loop so i tried it and it worked
+#sorta proud of that one
 menu()
