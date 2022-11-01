@@ -1,15 +1,3 @@
-import re
-
-
-def add_zeros(price):
-    reg_str = str(price)
-    match = re.search('\.\d\d$', reg_str)
-
-    if match:
-        return reg_str
-    else:
-        return reg_str + '0'
-
 def blank(check):
     if check == "y":
         blank_cost = input("Blank Cost: $")
@@ -38,16 +26,15 @@ def quantity_check(check):
 
 def total_setup(quantity):
     num_set_str = "Number of Setups:"
-
     set_str = "Setup Cost: $"
 
     if int(quantity) < 288:
         setup_cost = float_validate(set_str)
         number_of_setups = int_validate(num_set_str)
         if int(quantity) > 0:
-            setup_piece = round(float(setup_cost) * float(number_of_setups) / float(quantity), 2)
-            print_setup_piece = add_zeros(setup_piece)
-            print("Setup cost per piece: $" + str(print_setup_piece))
+            setup_piece = float(setup_cost) * float(number_of_setups) / float(quantity)
+
+            print(f"Setup cost per piece: ${setup_piece:.2f}")
         else:
             setup_piece = 0.00
     elif int(quantity) >= 288:
@@ -75,16 +62,22 @@ def hard_setup(quantity, set_check_str, more_set_str, p_code_str):
                 i = 0
         else:
             set_piece = round(float(hard_setup) / float(quantity), 2)
-            print_hard_setup = add_zeros(hard_setup)
-            print_set_piece = add_zeros(set_piece)
-            print(f"Total Setup Cost: ${print_hard_setup}")
-            print(f"Setup per Piece: ${print_set_piece}")
+            if float(set_piece) < 0.01:
+                set_piece += 0.01
+                print(f"Total Setup Cost: ${hard_setup:.2f}")
+                print(f"Setup per Piece: ${set_piece:.2f}")
+                return set_piece
+            else:
+                print(f"Total Setup Cost: ${hard_setup:.2f}")
+                print(f"Setup per Piece: ${set_piece:.2f}")
+                return set_piece
+
+            print(f"Total Setup Cost: ${hard_setup:.2f}")
+            print(f"Setup per Piece: ${set_piece:.2f}")
             return set_piece
     else:
         set_piece = 0
         return set_piece
-
-
 
 def private_label(private_check_str):
     check_private_label = input(f"{private_check_str}")
@@ -97,11 +90,8 @@ def private_label(private_check_str):
         private_label_float = private_label(private_check_str)
         return private_label_float
 
-    print("Private Label Cost: $" + str(private_label_float))
+    print(f"Private Label Cost: $ {private_label_float}")
     return private_label_float
-
-
-
 
 def add_cost(blank_cost, printing_cost, setup_piece, private_label_cost, finishing_cost):
     if blank_cost != 0:
@@ -114,7 +104,7 @@ def add_cost(blank_cost, printing_cost, setup_piece, private_label_cost, finishi
 def hard_add_cost(blank_cost, printing_cost, total_setup_cost):
     if blank_cost != 0:
         cost = float(blank_cost) + float(printing_cost) + float(total_setup_cost)
-        print(f"Total Cost: ${cost}")
+        print(f"Total Cost: ${cost:.2f}")
         return cost
     else:
         cost = 0
@@ -122,33 +112,31 @@ def hard_add_cost(blank_cost, printing_cost, total_setup_cost):
 
 def three_xl_cost_check(total_three_xl_cost):
     if total_three_xl_cost > 0:
-        print("Total 3XL Cost: $" + str(total_three_xl_cost))
+        print(f"Total 3XL Cost: ${total_three_xl_cost:.2f}")
     else:
         pass
 
 def two_xl_cost_check(total_two_xl_cost):
     if total_two_xl_cost > 0:
-        print("Total 2XL Cost: $" + str(total_two_xl_cost))
+        print(f"Total 2XL Cost: ${total_two_xl_cost:.2f}")
     else:
         pass
 
 def three_xl_price_check(three_xl_price):
-    if three_xl_price > 0:
-        print("3XL Price: $" + str(three_xl_price))
+    if float(three_xl_price) > 0:
+        print(f"3XL Price: ${three_xl_price:.2f}")
     else:
         pass
 
 def two_xl_price_check(two_xl_price):
-    if two_xl_price > 0:
-        print("2XL Price: $" + str(two_xl_price))
+    if float(two_xl_price) > 0:
+        print(f"2XL Price: ${two_xl_price:.2f}")
     else:
         pass
 
 def price_margin(total_cost, final_margin):
     price_float = float(total_cost) / float(final_margin)
     return price_float
-
-
 
 def margin_invert(margin_output):
     if margin_output < 1:
@@ -208,7 +196,7 @@ def location_validation(check):
             else:
                 i = 0
         else:
-            print(f"Total Printing Cost: ${total_print}")
+            print(f"Total Printing Cost: ${total_print:.2f}")
             return total_print
     else:
         total_print = 0
@@ -235,18 +223,18 @@ def net_print(run_check_str, p_code_str):
             var_str = f"Location {i} Cost: $"
             print_cost = float_validate(var_str)
             net_float = price_code(p_code_str, print_cost)
-            total_print += round(float(net_float), 2)
+            total_print += float(net_float)
             check = simple_y_n(run_check_str)
             if check == "y":
                 i += 1
             elif check == "n":
                 i = 0
         else:
-            print(f"Total Printing Cost: ${total_print}")
+            print(f"Total Printing Cost: ${total_print:.2f}")
             return total_print
     else:
         total_print = 0
-        print(f"Total Printing Cost: ${total_print}")
+        print(f"Total Printing Cost: ${total_print:.2f}")
         return total_print
 
 def calc_fun(check):
@@ -255,7 +243,6 @@ def calc_fun(check):
     elif check == "y":
         b_cost_str = "Blank Cost: $"
         valid_num_str = "Please enter a valid number."
-
         to_print_str = "Total Printing Cost: $"
         set_str = "Setup Cost: $"
         net_str = "Net Cost: $"
@@ -284,18 +271,13 @@ def calc_fun(check):
         # string inputs
         val_code_str = "Please enter a valid price code. "
         val_op_str = "Please enter a valid option. "
-
         p_code_str = "Price Code: "
-
         sa_as_str = "Save as: "
-
         #integer input
         num_set_str = "Number of Setups:"
         quant_str = "Quantity: "
         num_loc_str = "Number of Locations: "
         val_int_str = "Please enter a valid whole number."
-
-
         customer = input("Customer: ")
         job_name = input("Job Name: ")
         item_number = input("Item Number: ")
@@ -311,29 +293,21 @@ def calc_fun(check):
         margin_output = float_validate(prof_mar_str)
         final_margin = margin_invert(margin_output)
         total_cost = add_cost(blank_cost, printing_cost, set_piece, private_label_cost, finishing_cost)
-        print("Total Cost: $" + str(total_cost))
+        print(f"Total Cost: ${total_cost:.2f}")
         total_two_xl_cost = add_cost(two_xl_cost, printing_cost, set_piece, private_label_cost, finishing_cost)
         two_xl_print_toggle = two_xl_cost_check(total_two_xl_cost)
-
         total_three_xl_cost = add_cost(three_xl_cost, printing_cost, set_piece, private_label_cost, finishing_cost)
         three_xl_print_toggle = three_xl_cost_check(total_three_xl_cost)
-
         price = price_margin(total_cost, final_margin)
-        print("Price SM-XL: $" + str(price))
-
+        print(f"Price SM-XL: ${price:.2f}")
         two_xl_price = price_margin(total_two_xl_cost, final_margin)
         two_xl_price_check(two_xl_price)
-
         three_xl_price = price_margin(total_three_xl_cost, final_margin)
         three_xl_price_check(three_xl_price)
-
         print("Hit enter to continue...")
         input(".....")
 
-
-
         save_check(customer, job_name, color, price, two_xl_price, three_xl_price, item_number, quantity)
-
 
         menu_check = simple_y_n(men_check_str)
         if menu_check == "n":
@@ -344,7 +318,7 @@ def calc_fun(check):
 
 def price_code(p_code_str, price):
     letter_code = input(f"{p_code_str}")
-    price = round(float(price), 2)
+    price = float(price)
     if letter_code == 'a' or letter_code =='p':
         price *= 0.5
 
@@ -375,8 +349,8 @@ def price_code(p_code_str, price):
         print("Please enter a valid price code: ")
         price_float = price_code(p_code_str, price)
         return price_float
-    price_print = round(price, 2)
-    print(f"Net cost: {price_print}")
+
+    print(f"Net cost: ${price:.2f}")
     return price
 
 #def net_convert(float_code, blank_cost)
@@ -387,15 +361,12 @@ def hard_fun(check):
     elif check == "y":
         b_cost_str = "Blank Cost: $"
         valid_num_str = "Please enter a valid number."
-
         to_print_str = "Total Printing Cost: $"
         set_str = "Setup Cost: $"
         net_str = "Net Cost: $"
         set_piece_str = "Setup per piece: $"
         to_set_str = "Total Setup Cost: $"
-
         prof_mar_str = "Profit Margin: "
-
         #yes no questions
         save_str = "Would you like to save this quote? y/n  "
         yes_str = "y"
@@ -403,23 +374,16 @@ def hard_fun(check):
         price_check_str = "Would you like to price an item? y/n  "
         men_check_str = "Return to menu? y/n "
         set_check_str = "Are there set up costs? y/n  "
-
         more_set_str = "Is there another setup? y/n  "
         run_check_str = "Run charge? y/n "
         # string inputs
         val_code_str = "Please enter a valid price code. "
         val_op_str = "Please enter a valid option. "
-
         p_code_str = "Price Code:  "
-
         sa_as_str = "Save as:  "
-
         #integer input
-
         quant_str = "Quantity:  "
-
         val_int_str = "Please enter a valid whole number."
-
         customer = input("Customer: ")
         job_name = input("Job Name: ")
         item_number = input("Item Number: ")
@@ -427,19 +391,14 @@ def hard_fun(check):
         quantity = quantity_check(check)
         blank_cost = blank(check)
         net_cost = price_code(p_code_str, blank_cost)
-
         total_setup_cost = hard_setup(quantity, set_check_str, more_set_str, p_code_str)
         net_print_cost = net_print(run_check_str, p_code_str)
         total_hard_cost = hard_add_cost(net_cost, total_setup_cost, net_print_cost)
-
         margin_output = float_validate(prof_mar_str)
         final_margin = margin_invert(margin_output)
         price = price_margin(total_hard_cost, final_margin)
-        print(f"Price: {price}")
-
+        print(f"Price: ${price:.2f}")
         hard_save_check(customer, job_name, color, price, item_number, quantity)
-
-
         check = simple_y_n(men_check_str)
         if check == "n":
             exit_check()
@@ -473,7 +432,6 @@ def exit_check():
         elif menu_check == "y":
             menu()
 
-
 def save_check(customer, job_name, color, price, two_xl_price, three_xl_price, item_number, quantity):
     want_to_save = "Would you like to save this quote? y/n "
     want_save_check = simple_y_n(want_to_save)
@@ -484,10 +442,9 @@ def save_check(customer, job_name, color, price, two_xl_price, three_xl_price, i
             exit_check()
         elif want_menu_check == "y":
             menu()
-    elif check == "y":
+    elif want_save_check == "y":
         f_name = input("Save as: ")
         f = open(f"{f_name}", "a")
-
         f.write(
 f"""Customer: {customer}
 Job Name: {job_name}
@@ -498,18 +455,18 @@ Color: {color}
 f"""Quantity: {quantity}
 """)
         f.write(
-f"""Price SM-XL: ${price}
+f"""Price SM-XL: ${price:.2f}
 """)
         if float(two_xl_price) > 0:
             f.write(
-f"""Price 2XL: ${two_xl_price}
+f"""Price 2XL: ${two_xl_price:.2f}
 """)
         else:
             pass
 
         if float(three_xl_price) > 0:
             f.write(
-f"""Price 3XL: ${three_xl_price}
+f"""Price 3XL: ${three_xl_price:.2f}
 """)
         else:
             pass
@@ -538,7 +495,7 @@ Color: {color}
 f"""Quantity: {quantity}
 """)
         f.write(
-f"""Price: ${price}
+f"""Price: ${price:.2f}
 """)
 
 
@@ -573,6 +530,5 @@ def menu():
         menu_input = input("Please enter a valid option: ")
         menu()
     return
-
 
 menu()
