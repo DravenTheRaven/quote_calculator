@@ -11,6 +11,19 @@ def blank(check):
             return blank_float
     return blank_cost
 
+def quantity_check(check):
+    if check == "y":
+        quantity_output = input("Quantity: ")
+        try:
+            quantity_int = int(quantity_output)
+        except:
+            print("Please enter a valid number")
+            quantity_int = quantity_check(check)
+            return quantity_int
+        else:
+            return quantity_int
+    return quantity_output
+
 def locations():
     num_loc = input("Number of Locations: ")
     try:
@@ -117,15 +130,15 @@ def total_print(number_of_locations):
     return printing_cost
 
 def total_setup(quantity):
-    if quantity < 288:
+    if int(quantity) < 288:
         setup_cost = float(input("Setup Cost: $"))
         number_of_setups = input("Number of set ups: ")
-        if quantity > 0:
+        if int(quantity) > 0:
             setup_piece = round(setup_cost / quantity, 2)
             print("Setup cost per piece: $" + str(setup_piece))
         else:
             setup_piece = 0.00
-    elif quantity >= 288:
+    elif int(quantity) >= 288:
          setup_cost = 0
          setup_piece = 0.00
 
@@ -242,13 +255,15 @@ def margin_invert(margin_output):
         inverted_margin = (100 - margin_output) / 100
         return inverted_margin
 
-
 def calc_fun(check):
     if check != "y":
         exit_check()
     elif check == "y":
+        customer = input("Customer: ")
+        job_name = input("Job Name: ")
         item_number = input("Item Number: ")
-        quantity = float(input("Quantity: "))
+        color = input("Color: ")
+        quantity = quantity_check(check)
         blank_cost = blank(check)
 
         two_xl_check = input("2XLs? y/n ")
@@ -291,8 +306,9 @@ def calc_fun(check):
 
         print("Hit enter to continue...")
         input(".....")
-        exit_check()
 
+        save_check(customer, job_name, color, price, two_xl_check, two_xl_price, three_xl_check, three_xl_price, item_number, quantity)
+    exit_check()
 
 def exit_check():
     want_to_exit = input("Would you like to exit? y/n ")
@@ -303,9 +319,78 @@ def exit_check():
         check = input("Would you like to price a garment? y/n ")
         calc_fun(check)
 
+def save_check(customer, job_name, color, price, two_xl_check, two_xl_price, three_xl_check, three_xl_price, item_number, quantity):
+    want_to_save = input("Would you like to save this quote? y/n")
+    if want_to_save == "n":
+        exit_check()
+    elif want_to_save == "y":
+        f_name = input("Save as: ")
+        f = open(f"{f_name}", "a")
 
+        f.write(
+f"""Customer: {customer}
+Job Name: {job_name}
+Item Number: {item_number}
+Color: {color}
+""")
+        f.write(
+f"""Quantity: {quantity}
+""")
+        f.write(
+f"""Price SM-XL: ${price}.
+""")
+        if two_xl_check == "y":
+            f.write(
+f"""Price 2XL: ${two_xl_price}
+""")
+        else:
+            pass
+        if three_xl_check == "y":
+            f.write(
+f"""Price 3XL: ${three_xl_price}
+""")
+        else:
+            pass
+
+        f.write(
+"""
+""")
+        f.close()
+
+def menu():
+    print("Main Menu: ")
+    print("Screen Printing")
+    print("Hard Goods")
+    print("Embroidery")
+    print("Exit")
+    print("About")
+    print("Type 's' for screen printing, 'h' for hard goods, and 'e for embroidery'")
+    print("Type 'exit' to exit and 'about' to learn about the program")
+    menu_input = input("Choose an option: ")
+    if menu_input == "s":
+        menu_input = 'y'
+        calc_fun(menu_input)
+    elif menu_input == "exit":
+        exit_check()
+    elif menu_input == "e":
+        embroidery_fun()
+    elif menu_input == "about":
+        about()
+    elif menu_input == "h":
+        hard_fun()
+    else:
+        print("Please enter a valid option")
+        menu()
+    return
+
+
+menu()
 print("Welcome to the pricing calculator.")
 print("Type 'y' or 'n' when promted.")
+print("The program is kind of dumb, so you have to enter those exactly")
+print("It shouldn't throw any errors, but if it gets stuck in a loop,")
+print("then you should close the program and try again")
+input("Press any key to continue...")
 check = input("Would you like to price a garment? y/n ")
 
 calc_fun(check)
