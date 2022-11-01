@@ -144,6 +144,9 @@ def total_setup(quantity):
 
     return setup_piece
 
+def hard_setup(quantity):
+
+
 def private_label(check_private_label):
     if check_private_label == "y":
         private_label_float = float(0.25)
@@ -310,14 +313,65 @@ def calc_fun(check):
         save_check(customer, job_name, color, price, two_xl_check, two_xl_price, three_xl_check, three_xl_price, item_number, quantity)
     exit_check()
 
+def price_code(letter_code, price):
+    if letter_code == 'a' or letter_code =='p':
+        price *= 0.5
+        print(f"Net cost: {price}")
+    elif letter_code == 'b' or letter_code == 'q':
+        price *= 0.55
+        print(f"Net cost: {price}")
+    elif letter_code == 'c' or letter_code == 'r':
+        price *= 0.6
+        print(f"Net cost: {price}")
+    elif letter_code == 'd' or letter_code == 's':
+        price *= 0.65
+        print(f"Net cost: {price}")
+    elif letter_code == 'e' or letter_code =='t':
+        price *= 0.70
+        print(f"Net cost: {price}")
+    elif letter_code == 'f' or letter_code == 'u':
+        price *= 0.75
+        print(f"Net cost: {price}")
+    elif letter_code == 'g' or letter_code == 'v':
+        price *= 0.8
+        print(f"Net cost: {price}")
+    elif letter_code == 'h':
+        price *= .85
+        print(f"Net cost: {price}")
+    elif letter_code =='n' or letter_code == 'none' or letter_code == 0 or letter_code == 'no':
+        print(f"Net cost: {price}")
+    else:
+        letter_code = input("Please enter a valid price code: ")
+        price_float = price_code(letter_code, price)
+        return price_float
+    return price
+
+#def net_convert(float_code, blank_cost)
+
+def hard_fun(check):
+    if check != "y":
+        exit_check()
+    elif check == "y":
+        customer = input("Customer: ")
+        job_name = input("Job Name: ")
+        item_number = input("Item Number: ")
+        color = input("Color: ")
+        quantity = quantity_check(check)
+        blank_cost = blank(check)
+        letter_code = input("Price Code: ")
+        net_cost = price_code(letter_code, blank_cost)
+
+        exit_check()
 def exit_check():
     want_to_exit = input("Would you like to exit? y/n ")
 
     if want_to_exit == "y":
         quit()
     else:
-        check = input("Would you like to price a garment? y/n ")
-        calc_fun(check)
+        check = input("Return to menu? y/n ")
+        if check == "n":
+            quit()
+        else: menu()
 
 def save_check(customer, job_name, color, price, two_xl_check, two_xl_price, three_xl_check, three_xl_price, item_number, quantity):
     want_to_save = input("Would you like to save this quote? y/n")
@@ -377,9 +431,10 @@ def menu():
     elif menu_input == "about":
         about()
     elif menu_input == "h":
-        hard_fun()
+        menu_input = "y"
+        hard_fun(menu_input)
     else:
-        print("Please enter a valid option")
+        menu_input = input("Please enter a valid option: ")
         menu()
     return
 
@@ -391,6 +446,6 @@ print("The program is kind of dumb, so you have to enter those exactly")
 print("It shouldn't throw any errors, but if it gets stuck in a loop,")
 print("then you should close the program and try again")
 input("Press any key to continue...")
-check = input("Would you like to price a garment? y/n ")
+check = input("Would you like to price an item? y/n ")
 
 calc_fun(check)
